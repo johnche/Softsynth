@@ -20,41 +20,31 @@ def saveToFile(channels, dataSize, sampleRate, numSamples):
 	save.close()
 
 def sine(x):
-	print "x ", x
 	return math.sin(2 * math.pi * x)
 
 def sinew(amplitude, samplesPerCycle, i):
-	print (i % samplesPerCycle)/samplesPerCycle
-	return int(amplitude * sine((i % samplesPerCycle)/samplesPerCycle))
+	return int(amplitude * sine((i % samplesPerCycle)/float(samplesPerCycle)))
 
+def saw(amplitude, samplesPerCycle, i):
+	return int(amplitude * (i % samplesPerCycle)/samplesPerCycle)
 
 def square(amplitude, samplesPerCycle, i):
 	#TODO: Modifiable frequency
-	onoff = False
-	for i in range(numSamples):
-		if (i % samplesPerCycle == 0): onoff = not onoff
-		if onoff: sample = amplitude
-		if not onoff: sample = amplitude/2
-		data.append(int(sample))
-		dataList.append(int(sample))
-	return data, dataList
+	if (i % (samplesPerCycle * 2) < samplesPerCycle):
+		sample = amplitude
+	else:
+		sample = amplitude/2
+	return int(sample)
 
-def saw(amplitude, samplesPerCycle, i):
-	print (i % samplesPerCycle)/samplesPerCycle
-	return int(amplitude * (i % samplesPerCycle)/samplesPerCycle)
-
-def calculateSamples(numSamples, amplitude, samplesPerCycle):
+def calculateSamples(numSamples, amplitude, samplesPerCycle, wavefunc):
 	dataList= []
 	data = array.array('h')
+	onoff = False
+	print "test " , samplesPerCycle
 	for i in range(numSamples):
-		#data.append(square(amplitude, samplesPerCycle, i))
-		#dataList.append(square(amplitude, samplesPerCycle, i))
-
-		data.append(saw(amplitude, samplesPerCycle, i))
-		dataList.append(saw(amplitude, samplesPerCycle, i))
-
-		#data.append(sinew(amplitude, samplesPerCycle, i))
-		#dataList.append(sinew(amplitude, samplesPerCycle, i))
+		sample = wavefunc(amplitude, samplesPerCycle, i, onoff)
+		data.append(sample)
+		dataList.append(sample)
 	return dataList, data
 
 
@@ -68,12 +58,10 @@ if __name__=="__main__":
 	duration = 3
 	sampleRate = 44100 #samples per sec
 	frequency = int(raw_input("Frequency: "))
-	print frequency
 	amplitude = 32767 * float(volume) / 100
 	numSamples = sampleRate * duration
 	samplesPerCycle = int(sampleRate / frequency)
-	print samplesPerCycle
-	dataList, data = calculateSamples(numSamples, amplitude, samplesPerCycle)
+	dataList, data = calculateSamples(numSamples, amplitude, samplesPerCycle, sinew)
 
 	#WRITE TO FILE
 	#os.remove("Sinus.wav")
