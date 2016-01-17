@@ -39,14 +39,15 @@ def square(amplitude, samplesPerCycle, i):
 def calculateSamples(numSamples, amplitude, samplesPerCycle, wavefunc):
 	dataList= []
 	data = array.array('h')
-	onoff = False
 	print "test " , samplesPerCycle
 	for i in range(numSamples):
-		sample = wavefunc(amplitude, samplesPerCycle, i, onoff)
+		sample = wavefunc(amplitude, samplesPerCycle, i)
 		data.append(sample)
 		dataList.append(sample)
 	return dataList, data
 
+def noteFrequencies(origin, note):
+	return 2**((note-49)/12)*440
 
 if __name__=="__main__":
 	# Initialization of data, structure for storing intensities
@@ -57,7 +58,8 @@ if __name__=="__main__":
 	dataSize = 2
 	duration = 3
 	sampleRate = 44100 #samples per sec
-	frequency = int(raw_input("Frequency: "))
+	refFrequency = int(raw_input("Frequency: "))
+	frequency = refFrequency #TODO: change this
 	amplitude = 32767 * float(volume) / 100
 	numSamples = sampleRate * duration
 	samplesPerCycle = int(sampleRate / frequency)
