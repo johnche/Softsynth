@@ -28,6 +28,13 @@ def sinew(amplitude, samplesPerCycle, i):
 def saw(amplitude, samplesPerCycle, i):
 	return int(amplitude * (i % samplesPerCycle)/samplesPerCycle)
 
+def triangle(amplitude, samplesPerCycle, i):
+	if (i % (samplesPerCycle * 2) < samplesPerCycle):
+		sample = amplitude * (i % samplesPerCycle)/samplesPerCycle
+	else:
+		sample = amplitude * (samplesPerCycle - (i % samplesPerCycle))/samplesPerCycle
+	return int(sample)
+
 def square(amplitude, samplesPerCycle, i):
 	#TODO: Modifiable frequency
 	if (i % (samplesPerCycle * 2) < samplesPerCycle):
@@ -39,7 +46,6 @@ def square(amplitude, samplesPerCycle, i):
 def calculateSamples(numSamples, amplitude, samplesPerCycle, wavefunc):
 	dataList= []
 	data = array.array('h')
-	print "test " , samplesPerCycle
 	for i in range(numSamples):
 		sample = wavefunc(amplitude, samplesPerCycle, i)
 		data.append(sample)
@@ -63,7 +69,7 @@ if __name__=="__main__":
 	amplitude = 32767 * float(volume) / 100
 	numSamples = sampleRate * duration
 	samplesPerCycle = int(sampleRate / frequency)
-	dataList, data = calculateSamples(numSamples, amplitude, samplesPerCycle, sinew)
+	dataList, data = calculateSamples(numSamples, amplitude, samplesPerCycle, triangle)
 
 	#WRITE TO FILE
 	#os.remove("Sinus.wav")
