@@ -110,6 +110,7 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 	sumDuration = 0
 	sumSamples = 0
 	#TODO: Add different duration per pitch functionality
+	#TODO: Make each unique duration metronome dependent
 	refFrequency = int(raw_input("A4 Reference frequency: "))
 	print notes
 	while True:
@@ -121,7 +122,6 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 		print "frequency ", notes[i], frequency
 		samplesPerCycle = int(sampleRate / frequency)
 		numSamples = duration * sampleRate
-		#data, dataList = calculateSamples(numSamples, amplitude, samplesPerCycle, wavefunc)
 		sumDuration += 1 #TODO: change this when duration per pitch != 1 second
 		for j in range(numSamples):
 			sample = wavefunc(amplitude, samplesPerCycle, j)
@@ -131,18 +131,6 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 	print dataList
 	return dataList, data, sumSamples
 
-#def calculateSamples(numSamples, amplitude, samplesPerCycle, wavefunc):
-#	dataList= []
-#	data = array.array('h')
-#	for i in range(numSamples):
-#		sample = wavefunc(amplitude, samplesPerCycle, i)
-#		data.append(sample)
-#		dataList.append(sample)
-#	return dataList, data
-
-
-
-
 if __name__=="__main__":
 	# Initialization of data, structure for storing intensities
 	data = array.array('h')
@@ -150,15 +138,9 @@ if __name__=="__main__":
 	volume = 100
 	channels = 1 #mono/stereo
 	dataSize = 2
-	#duration = 1
 	sampleRate = 44100 #samples per sec
-	#pitch = 59
-	#frequency = refFrequency #TODO: change this
 	amplitude = 32767 * float(volume) / 100
 	notes = setNotes()
-	#numSamples = sampleRate * duration
-	#samplesPerCycle = int(sampleRate / frequency)
-	#dataList, data = calculateSamples(numSamples, amplitude, samplesPerCycle, triangle)
 	dataList, data, sumSamples = createTune(sampleRate, amplitude, notes, sinew)
 
 	#WRITE TO FILE
