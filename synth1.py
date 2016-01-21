@@ -76,9 +76,9 @@ def metronome(bpm):
 
 def setBpm():
 	while True:
-		bpm = raw_input("Input BPM (standard is 120): ")
+		bpm = int(raw_input("Input BPM (standard is 120): "))
 		if (bpm < 1): print "Error: BPM"
-		else: return int(bpm)
+		else: return bpm
 
 
 
