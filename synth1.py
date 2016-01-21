@@ -8,7 +8,7 @@ import random
 def graphData(limit, samples):
 	view = 500 #number of samples included
 	domain = np.arange(1,view+1)
-	print samples[0:view]
+	print samples[0:50]
 	plt.plot(domain, samples[0:view], 'bs') #plot(x,y, 'bluesquares')
 	plt.ylabel('Sample')
 	plt.xlabel('Time')
@@ -20,7 +20,6 @@ def saveToFile(channels, dataSize, sampleRate, numSamples):
 	save.writeframes(data.tostring())
 	save.close()
 
-
 ######################################
 #                                    #
 #                                    #
@@ -29,12 +28,21 @@ def saveToFile(channels, dataSize, sampleRate, numSamples):
 #                                    #
 ######################################
 
+def superPosition():
+	#TODO: Superposition
+
+	pass
+
+def timbre():
+	#TODO: Instrument library
+	pass
 
 def sine(x):
 	return math.sin(2 * math.pi * x)
 
 def sinew(amplitude, samplesPerCycle, i):
-	return int(amplitude * sine((i % samplesPerCycle)/float(samplesPerCycle))) #Denominator must be float, python casts the whole fraction to int because tilbakestaaende.
+	return int(amplitude * sine((i % samplesPerCycle)/float(samplesPerCycle)))
+#Denominator must be float, python casts the whole fraction to int because tilbakestaaende.
 
 def saw(amplitude, samplesPerCycle, i):
 	return int(amplitude * (i % samplesPerCycle)/samplesPerCycle)
@@ -54,6 +62,26 @@ def square(amplitude, samplesPerCycle, i):
 		sample = amplitude/2
 	return int(sample)
 
+
+######################################
+#                                    #
+#                                    #
+#          Speed calculation         #
+#                                    #
+#                                    #
+######################################
+
+def metronome(bpm):
+	return (bpm/60.0) #beats per second
+
+def setBpm():
+	while True:
+		bpm = raw_input("Input BPM (standard is 120): ")
+		if (bpm < 1): print "Error: BPM"
+		else: return int(bpm)
+
+
+
 ######################################
 #                                    #
 #                                    #
@@ -65,6 +93,7 @@ def square(amplitude, samplesPerCycle, i):
 def setNotes():
 	notes = {}
 	notes['c'] = 40
+	notes['cs'] = 41
 	notes['d'] = 42
 	notes['e'] = 44
 	notes['f'] = 45
@@ -97,11 +126,12 @@ def generateTune(notes):
 			return tune
 		else:
 			tune.append(tone)
-		print "something"
 
 def createTune(sampleRate, amplitude, notes, wavefunc):
 	#Use generateTune and makePitch to create series of pitches
 	#TODO: split the function
+	#TODO: Add different duration per pitch functionality
+	#TODO: Make each unique duration metronome dependent
 	tune = []
 	data = array.array('h')
 	dataList = []
@@ -109,8 +139,8 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 	numSamples = sampleRate * duration
 	sumDuration = 0
 	sumSamples = 0
-	#TODO: Add different duration per pitch functionality
-	#TODO: Make each unique duration metronome dependent
+	relativeSpeed = 1/metronome(setBpm())
+	print relativeSpeed
 	refFrequency = int(raw_input("A4 Reference frequency: "))
 	print notes
 	while True:
@@ -123,12 +153,13 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 		samplesPerCycle = int(sampleRate / frequency)
 		numSamples = duration * sampleRate
 		sumDuration += 1 #TODO: change this when duration per pitch != 1 second
-		for j in range(numSamples):
+		for j in range(int(numSamples * relativeSpeed)):
 			sample = wavefunc(amplitude, samplesPerCycle, j)
 			data.append(sample)
 			dataList.append(sample)
-	sumSamples = sumDuration * sampleRate
-	print dataList
+	#sumSamples = sumDuration * sampleRate
+	sumSamples = len(dataList)
+	print len(dataList), sumSamples
 	return dataList, data, sumSamples
 
 if __name__=="__main__":
@@ -142,6 +173,8 @@ if __name__=="__main__":
 	amplitude = 32767 * float(volume) / 100
 	notes = setNotes()
 	dataList, data, sumSamples = createTune(sampleRate, amplitude, notes, sinew)
+
+	#TODO: Superposition and pitchsubstance
 
 	#WRITE TO FILE
 	#os.remove("Sinus.wav")
