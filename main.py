@@ -2,7 +2,9 @@ import math, wave, array
 import matplotlib.pyplot as plt #graphtesting
 import numpy as np #listgenerator
 import os, sys #os.remove
+from operator import add
 import random
+import speed, sample, pitch
 
 #TODO: Pitches, superposition
 def graphData(limit, samples):
@@ -19,23 +21,6 @@ def saveToFile(channels, dataSize, sampleRate, numSamples):
 	save.setparams((channels, dataSize, sampleRate, numSamples, "NONE", "Uncompressed"))
 	save.writeframes(data.tostring())
 	save.close()
-
-######################################
-#                                    #
-#                                    #
-#        Sample Calculation          #
-#                                    #
-#                                    #
-######################################
-
-def superPosition():
-	#TODO: Superposition
-
-	pass
-
-def timbre():
-	#TODO: Instrument library
-	pass
 
 def sine(x):
 	return math.sin(2 * math.pi * x)
@@ -61,25 +46,6 @@ def square(amplitude, samplesPerCycle, i):
 	else:
 		sample = amplitude/2
 	return int(sample)
-
-
-######################################
-#                                    #
-#                                    #
-#          Speed calculation         #
-#                                    #
-#                                    #
-######################################
-
-def metronome(bpm):
-	return (bpm/60.0) #beats per second
-
-def setBpm():
-	while True:
-		bpm = int(raw_input("Input BPM (standard is 120): "))
-		if (bpm < 1): print "Error: BPM"
-		else: return bpm
-
 
 
 ######################################
@@ -111,6 +77,11 @@ def makePitch(origin, note, sampleRate, duration, amplitude, samplesPerCycle, wa
 def pitchFrequencies(origin, note):
 	return math.pow(2,((note-49)/12.0))*origin
 
+def refFrequency():
+	return int(raw_input("A4 Reference frequency: "))
+
+############ File end
+
 def inputTune():
 	return raw_input("Input pitch or x to end: ")
 
@@ -139,8 +110,8 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 	numSamples = sampleRate * duration
 	sumDuration = 0
 	sumSamples = 0
-	relativeSpeed = 1/metronome(setBpm())
-	print relativeSpeed
+	#relativeSpeed = 1/metronome(setBpm())
+	baseSpeed = speed.getSpeed()
 	refFrequency = int(raw_input("A4 Reference frequency: "))
 	print notes
 	while True:
@@ -153,11 +124,10 @@ def createTune(sampleRate, amplitude, notes, wavefunc):
 		samplesPerCycle = int(sampleRate / frequency)
 		numSamples = duration * sampleRate
 		sumDuration += 1 #TODO: change this when duration per pitch != 1 second
-		for j in range(int(numSamples * relativeSpeed)):
+		for j in range(int(numSamples * baseSpeed)):
 			sample = wavefunc(amplitude, samplesPerCycle, j)
 			data.append(sample)
 			dataList.append(sample)
-	#sumSamples = sumDuration * sampleRate
 	sumSamples = len(dataList)
 	print len(dataList), sumSamples
 	return dataList, data, sumSamples
@@ -171,7 +141,8 @@ if __name__=="__main__":
 	dataSize = 2
 	sampleRate = 44100 #samples per sec
 	amplitude = 32767 * float(volume) / 100
-	notes = setNotes()
+	notes = pitch.setNotes()
+	print notes
 	dataList, data, sumSamples = createTune(sampleRate, amplitude, notes, sinew)
 
 	#TODO: Superposition and pitchsubstance
@@ -181,4 +152,4 @@ if __name__=="__main__":
 	saveToFile(channels, dataSize, sampleRate, sumSamples)
 
 	#TESTING
-	graphData(sampleRate, dataList)
+	#graphData(sampleRate, dataList)
