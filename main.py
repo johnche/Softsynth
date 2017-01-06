@@ -27,7 +27,7 @@ def sine(x):
 
 def sinew(amplitude, samplesPerCycle, i):
 	return int(amplitude * sine((i % samplesPerCycle)/float(samplesPerCycle)))
-#Denominator must be float, python casts the whole fraction to int because tilbakestaaende.
+#Denominator must be float, python casts the whole fraction to int.
 
 def saw(amplitude, samplesPerCycle, i):
 	return int(amplitude * (i % samplesPerCycle)/samplesPerCycle)
