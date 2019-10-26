@@ -1,2 +1,0 @@
-# Softsynth
-Software synthesizer
