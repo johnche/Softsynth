@@ -38,14 +38,45 @@ class SynthController:
 		self.close()
 
 	def on_press(self, key):
-		if key == keyboard.Key.up:
-			self.synth.set_frequency(self.synth.frequency + 1)
-		elif key == keyboard.Key.down:
-			self.synth.set_frequency(self.synth.frequency - 1)
+		try:
+			if key.char == 'a':
+				self.synth.set_frequency(262)
+			elif key.char == 's':
+				self.synth.set_frequency(294)
+			elif key.char == 'd':
+				self.synth.set_frequency(330)
+			elif key.char == 'f':
+				self.synth.set_frequency(349)
+			elif key.char == 'g':
+				self.synth.set_frequency(392)
+			elif key.char == 'h':
+				self.synth.set_frequency(440)
+			elif key.char == 'j':
+				self.synth.set_frequency(494)
+			elif key.char == 'k':
+				self.synth.set_frequency(523)
+
+			elif key.char == 'w':
+				self.synth.set_frequency(278)
+			elif key.char == 'e':
+				self.synth.set_frequency(311)
+			elif key.char == 't':
+				self.synth.set_frequency(370)
+			elif key.char == 'y':
+				self.synth.set_frequency(415)
+			elif key.char == 'u':
+				self.synth.set_frequency(466)
+		except AttributeError:
+			if key == keyboard.Key.up:
+				self.synth.set_frequency(self.synth.frequency + 1)
+			elif key == keyboard.Key.down:
+				self.synth.set_frequency(self.synth.frequency - 1)
 	
 	def on_release(self, key):
 		if key == keyboard.Key.esc:
 			return False
+		else:
+			self.synth.set_frequency(0)
 
 	def run_keyboard(self):
 		listener = keyboard.Listener(
