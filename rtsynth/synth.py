@@ -35,8 +35,6 @@ class Synthesizer:
 	def play(self):
 		for cycle in self.sample_generator:
 			self.stream.write(cycle)
-		#if self.samples:
-		#	self.stream.write(self.samples)
 
 	def close(self):
 		self.stream.stop_stream()
