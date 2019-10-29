@@ -1,4 +1,4 @@
-from vco import SineOscillator, SquareOscillator
+from vco import SineOscillator, SquareOscillator, SawtoothOscillator, TriangleOscillator
 import pyaudio
 import numpy as np
 
@@ -14,7 +14,9 @@ class Synthesizer:
 				output=True)
 		
 		#self.vco = SineOscillator(self.sampling_rate)
-		self.vco = SquareOscillator(self.sampling_rate)
+		#self.vco = SquareOscillator(self.sampling_rate)
+		self.vco = SawtoothOscillator(self.sampling_rate)
+		#self.vco = TriangleOscillator(self.sampling_rate)
 		self.sample_generator = self.vco.get_wave()
 
 		self.frequency = 442

@@ -48,3 +48,24 @@ class SquareOscillator(Oscillator):
 			t = np.linspace(0, 2*np.pi, samplesPerCycle)
 			self.samples = signal.square(t).astype(np.float32).tobytes()
 
+
+class SawtoothOscillator(Oscillator):
+	def update_parameters(self, frequency):
+		if frequency == 0:
+			self. samples = self._create_silence()
+		else:
+			samplesPerCycle = self.get_samplesPerCycle(frequency)
+			self.samples = np.linspace(1, -1, samplesPerCycle)
+
+
+class TriangleOscillator(Oscillator):
+	# Skremmer livet av folk
+	def update_parameters(self, frequency):
+		if frequency == 0:
+			self. samples = self._create_silence()
+		else:
+			samplesPerCycle = self.get_samplesPerCycle(frequency)
+			t = np.linspace(0, 2*np.pi, samplesPerCycle)
+			self.samples = signal.sawtooth(t, width=0.5)
+			print(self.samples)
+
