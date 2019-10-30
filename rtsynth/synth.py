@@ -25,16 +25,6 @@ class Synthesizer:
 		self.frequency = frequency
 		self.vco.update_parameters(frequency)
 
-	def generate_samples(self, frequency):
-		num_samples = np.floor(self.sampling_rate/frequency)
-		n = np.linspace(0, 6*np.pi, 3*num_samples)
-		wave = np.sin(n)
-		wave = np.tile(wave, 2*frequency)
-		self.samples = self._create_samples(wave)
-
-	def _create_samples(self, wave_array):
-		return wave_array.astype(np.float32).tobytes()
-
 	def play(self):
 		for cycle in self.sample_generator:
 			self.stream.write(cycle)
