@@ -7,6 +7,7 @@ class Oscillator:
 		self.sampling_rate = sampling_rate
 		self.samples = np.zeros(500)
 		self.has_new_samples = False
+		self.active = True
 
 	def get_samplesPerCycle(self, frequency):
 		return int(self.sampling_rate/frequency)
@@ -15,7 +16,7 @@ class Oscillator:
 		return np.zeros(100)
 
 	def get_wave(self):
-		while True:
+		while self.active:
 			yield self.samples
 
 

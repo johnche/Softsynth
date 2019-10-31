@@ -12,20 +12,34 @@ class Synthesizer:
 				channels=1,
 				rate=self.sampling_rate,
 				output=True)
-		
-		#self.vco = SineOscillator(self.sampling_rate)
-		#self.vco = SquareOscillator(self.sampling_rate)
-		self.vco = SawtoothOscillator(self.sampling_rate)
-		#self.vco = TriangleOscillator(self.sampling_rate)
+
+		self.oscillators = [
+				SineOscillator(self.sampling_rate),
+				SquareOscillator(self.sampling_rate),
+				SawtoothOscillator(self.sampling_rate),
+				TriangleOscillator(self.sampling_rate)
+				]
+		self.oscillator_index = 0
+		self.vco = self.oscillators[0]
 		self.sample_generator = self.vco.get_wave()
+
+	def set_oscillator(self, index):
+		self.oscillator_index = index
+
+		# Switcherooo
+		self.vco.active = False
+		self.vco = self.oscillators[index]
+		self.sample_generator = self.vco.get_wave()
+		self.vco.active = True
 
 	def set_frequency(self, frequency):
 		self.frequency = frequency
 		self.vco.update_parameters(frequency)
 
 	def play(self):
-		for cycle in self.sample_generator:
-			self.stream.write(cycle)
+		while True:
+			for cycle in self.sample_generator:
+				self.stream.write(cycle)
 
 	def close(self):
 		self.stream.stop_stream()
