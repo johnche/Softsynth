@@ -1,0 +1,7 @@
+# pyaudio through pip (macOS/macports)
+
+pip install --global-option='build_ext' --global-option='-I/opt/local/include' --global-option='-L/opt/local/lib' pyaudio
+
+# pynput
+
+Has some system requirements. untill i add here, go read pynput doc
