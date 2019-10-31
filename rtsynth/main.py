@@ -76,6 +76,8 @@ class SynthController:
 			elif key == keyboard.Key.down:
 				if self.current_octave > 0:
 					self.current_octave -= 1
+			print(self.synth.frequency)
+			print('Current octave', self.current_octave)
 	
 	def on_release(self, key):
 		if key == keyboard.Key.esc:

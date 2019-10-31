@@ -19,8 +19,6 @@ class Synthesizer:
 		#self.vco = TriangleOscillator(self.sampling_rate)
 		self.sample_generator = self.vco.get_wave()
 
-		self.frequency = 442
-
 	def set_frequency(self, frequency):
 		self.frequency = frequency
 		self.vco.update_parameters(frequency)
