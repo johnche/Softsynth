@@ -26,12 +26,6 @@ class SineOscillator(Oscillator):
 			self.samples = self._create_silence()
 		else:
 			samplesPerCycle = self.get_samplesPerCycle(frequency)
-
-			# ALT 1, litt raspete
-			#x = np.linspace(0, 2*np.pi, samplesPerCycle)
-			#self.samples = np.sin(x).astype(np.float32).tobytes()
-
-			# ALT 2, har artifakter i frekvensskifte
 			n = np.arange(samplesPerCycle)
 			t = n/self.sampling_rate
 			omega = 2*np.pi*frequency
