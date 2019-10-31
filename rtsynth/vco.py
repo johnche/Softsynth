@@ -55,17 +55,15 @@ class SawtoothOscillator(Oscillator):
 			self. samples = self._create_silence()
 		else:
 			samplesPerCycle = self.get_samplesPerCycle(frequency)
-			self.samples = np.linspace(1, -1, samplesPerCycle)
+			self.samples = np.linspace(1, -1, samplesPerCycle).astype(np.float32).tobytes()
 
 
 class TriangleOscillator(Oscillator):
-	# Skremmer livet av folk
 	def update_parameters(self, frequency):
 		if frequency == 0:
 			self. samples = self._create_silence()
 		else:
 			samplesPerCycle = self.get_samplesPerCycle(frequency)
 			t = np.linspace(0, 2*np.pi, samplesPerCycle)
-			self.samples = signal.sawtooth(t, width=0.5)
-			print(self.samples)
+			self.samples = signal.sawtooth(t, width=0.5).astype(np.float32).tobytes()
 
