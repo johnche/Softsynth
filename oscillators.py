@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import signal
-from pitches import MTS_PITCHES
 
 
 def SineOscillator(data):
