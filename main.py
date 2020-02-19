@@ -1,7 +1,7 @@
 import select, socket
 from synth import Synthesizer
 from pynput import keyboard
-from pitches import TABLE_PITCHES 
+from pitches import TABLE_PITCHES
 from oscillators import SineOscillator
 from filters import LowpassFilter
 
@@ -22,13 +22,13 @@ class SynthController:
 
 		self.current_octave = 4
 		self.pressed_keys = []
-		self.midi_num = 50
-		self.lp_c = 1000
-		self.lp = LowpassFilter()
+		self.midi_num = 100
+		self.lp_c = {'fc': 1000}
 
 		self.synth += SineOscillator
-		self.synth += self.lp
-		self.synth.set_lowpass(self.lp_c)
+		self.synth += LowpassFilter('lp1')
+
+		self.synth.update_parameters({'lp1': self.lp_c})
 		self.synth.update()
 		self.synth.start()
 
@@ -95,14 +95,14 @@ class SynthController:
 					self.synth.play(self.midi_num)
 					print('Midi number', self.midi_num)
 			elif key == keyboard.Key.left:
-				self.lp_c -= 1
-				print('Lowpass cutoff', self.lp_c)
-				self.synth.set_lowpass(self.lp_c)
+				self.lp_c['fc'] -= 5
+				print('Lowpass cutoff', self.lp_c['fc'])
+				self.synth.update_parameters({'lp1': self.lp_c})
 				self.synth.update()
 			elif key == keyboard.Key.right:
-				self.lp_c += 1
-				print('Lowpass cutoff', self.lp_c)
-				self.synth.set_lowpass(self.lp_c)
+				self.lp_c['fc'] += 5
+				print('Lowpass cutoff', self.lp_c['fc'])
+				self.synth.update_parameters({'lp1': self.lp_c})
 				self.synth.update()
 
 			#if key == keyboard.Key.up:
@@ -121,7 +121,7 @@ class SynthController:
 
 			#print('Current octave', self.current_octave)
 			#print('Current oscillator index', self.synth.oscillator_index)
-	
+
 	def on_release(self, key):
 		if key == keyboard.Key.esc:
 			pass

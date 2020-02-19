@@ -7,7 +7,7 @@ def SineOscillator(data):
 	n = np.arange(samplesPerCycle)
 	t = n/data['fs']
 	omega = 2*np.pi*data['f']
-	data['data'] = np.sin(omega*t)
+	data['samples'] = np.sin(omega*t)
 	return data
 
 

@@ -4,8 +4,9 @@ from scipy.signal import butter, lfilter, freqz
 
 
 class Filter:
-	def __init__(self, sample_rate=44100, order=5):
-		self.nyquist_frequency = 0.5*sample_rate
+	def __init__(self, name, order=5):
+		self.name = name
+		self.module_name = 'Filter'
 		self.order = order
 
 	def plot_frequency_response(self, xlim=None):
@@ -26,17 +27,21 @@ class Filter:
 
 
 class LowpassFilter(Filter):
-	def _update(self, cutoff):
+	def get_coefficients(self, cutoff, sampling_rate):
 		'''
 		Calculate new coefficients
 		'''
-		normalized_cutoff = cutoff / self.nyquist_frequency
-		self.b, self.a = butter(self.order, normalized_cutoff, btype='low', analog=False)
+		nyquist_frequency = 0.5 * sampling_rate
+		normalized_cutoff = cutoff / nyquist_frequency
+		return butter(self.order, normalized_cutoff, btype='low', analog=False)
 
 	def __call__(self, data):
-		if not hasattr(self, 'cutoff') or self.cutoff != data['lpc']:
-			self.cutoff = data['lpc']
-			self._update(self.cutoff)
-		data['data'] = lfilter(self.b, self.a, data['data'])
+		params = data.get(self.name, None)
+		if params:
+			if not hasattr(self, 'cutoff') or self.cutoff != params['fc']:
+				self.cutoff = params['fc']
+				params['b'], params['a'] = self.get_coefficients(self.cutoff, data['fs'])
+			data['samples'] = lfilter(params['b'], params['a'], data['samples'])
+			data[self.name] = params
 		return data
 
